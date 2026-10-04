@@ -50,6 +50,12 @@ def build_daily_features(
         for horizon in return_horizons:
             group[f"label_end_session_{horizon}"] = group["session_date"].shift(-horizon)
             group[f"forward_log_return_{horizon}"] = np.log(close.shift(-horizon) / close)
+            # At row t, use returns from t+1 through t+h. Rolling at t+h
+            # contains exactly that interval, then shifting by -h aligns it to t.
+            future_squared = group["log_return_1"].pow(2).rolling(horizon).sum().shift(-horizon)
+            group[f"forward_realized_vol_{horizon}"] = np.sqrt(
+                future_squared * (252.0 / horizon)
+            )
         result_frames.append(group)
     if not result_frames:
         return bars.copy()

@@ -23,6 +23,8 @@ def test_features_are_available_next_observed_session() -> None:
     result = build_daily_features(sample_bars())
     assert result.loc[0, "feature_available_session"] == result.loc[1, "session_date"]
     assert np.isclose(result.loc[0, "forward_log_return_5"], 0.05)
+    expected_volatility = np.sqrt(5 * 0.01**2 * (252 / 5))
+    assert np.isclose(result.loc[0, "forward_realized_vol_5"], expected_volatility)
 
 
 def test_label_columns_are_never_returned_as_features() -> None:

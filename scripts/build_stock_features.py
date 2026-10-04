@@ -36,6 +36,7 @@ path = write_snapshot(
         "input_snapshot": str(args.raw_snapshot.resolve()),
         "input_sha256": manifest["sha256"],
         "feature_columns": feature_columns(features),
+        "feature_schema_version": 2,
         "return_horizons": [1, 5, 21],
         "volatility_windows": [21, 63],
     },

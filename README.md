@@ -34,6 +34,10 @@ Level 2 权限只扩展可执行动作，不是研究项目完成的前提。
 - `scripts/collect_ibkr_stock_history.py`：采集复权日线并保存不可变快照。
 - `scripts/collect_ibkr_option_chain.py`：采集不依赖报价权限的期权链结构。
 - `scripts/build_stock_features.py`：从已校验原始快照生成处理层特征数据。
+- `src/convexedge/models`：walk-forward、收益分布、概率校准、EWMA/GARCH/线性与 ML 波动率模型。
+- `scripts/run_model_experiment.py`：运行并保存完整样本外实验。
+- `docs/architecture.md`：当前系统分层与后续边界。
+- `docs/model_results_aapl.md`：首个五年真实数据基线结果。
 
 本地验证：
 
@@ -41,6 +45,7 @@ Level 2 权限只扩展可执行动作，不是研究项目完成的前提。
 python -m pytest -q
 python test_features\run_all.py
 python test_features\run_all.py --include-live
+python test_models\run_all.py
 ```
 
 真实数据采集示例：
