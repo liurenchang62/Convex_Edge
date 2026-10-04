@@ -11,8 +11,9 @@ class App(TestApp):
     def error(self, reqId, errorCode, errorString, advancedOrderRejectJson=""):
         super().error(reqId, errorCode, errorString, advancedOrderRejectJson)
         # 10167 is informational here: TWS continues with delayed data.
-        if reqId == 1 and errorCode in {321, 354, 10089, 10168}:
+        if reqId == 1 and errorCode in {321, 354, 10089, 10091, 10168}:
             print("UNAVAILABLE: option quote/Greeks permission or contract limitation")
+            self.fatal_error = f"{errorCode}: option quote/Greeks unavailable"
             self.done.set()
 
     def tickPrice(self, reqId, tickType, price, attrib):  # noqa: N802

@@ -103,8 +103,8 @@ def clean(value) -> object:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bond-id", default="91282CQQ7", help="CUSIP/ISIN (default: active 10-year US Treasury 91282CQQ7)")
-    parser.add_argument("--option-expiry", default="20260918", help="YYYYMMDD (default: currently valid AAPL expiry 20260918)")
-    parser.add_argument("--option-strike", type=float, default=330.0, help="Strike (default: 330, near current AAPL price)")
+    parser.add_argument("--option-expiry", help="YYYYMMDD; obtain a current value from 06_option_chain.py")
+    parser.add_argument("--option-strike", type=float, help="Strike; obtain a current value from 06_option_chain.py")
     parser.add_argument("--option-right", choices=["C", "P"], default="C")
     args = parser.parse_args()
     root = Path(__file__).resolve().parent

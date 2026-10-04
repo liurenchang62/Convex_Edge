@@ -24,6 +24,20 @@ Level 2 权限只扩展可执行动作，不是研究项目完成的前提。
 
 各目录中的 `运行指南.md` 是该层的测试入口和完成标准。建议按上述顺序开发，任何后层不得绕过前层的数据点时性和安全检查。
 
+## 当前实现
+
+- `src/convexedge/data`：point-in-time 校验、as-of 对齐、收益标签、实现波动率和 IBKR K 线规范化。
+- `tests`：确定性单元测试，包括刻意注入未来信息和未完成 K 线。
+- `test_features/00_ibkr_pit_smoke.py`：使用真实 IBKR 只读历史行情验证 UTC 与数据契约。
+- `docs/data_contract.md`：四时间字段、标签区间和原始数据保存规范。
+
+本地验证：
+
+```powershell
+python -m pytest -q
+python test_features\00_ibkr_pit_smoke.py --symbol AAPL
+```
+
 ## 当前安全边界
 
 - 数据测试保持 TWS 只读 API。
