@@ -20,12 +20,26 @@ connection_args(parser, 105)
 parser.add_argument("--symbol", default="AAPL")
 parser.add_argument("--duration", default="2 D")
 parser.add_argument("--bar-size", default="5 mins")
+parser.add_argument("--what-to-show", default="TRADES")
+parser.add_argument("--format-date", type=int, choices=[1, 2], default=1)
+parser.add_argument("--use-rth", type=int, choices=[0, 1], default=1)
 args = parser.parse_args()
 app = App()
 
 
 def request():
-    app.reqHistoricalData(1, stock(args.symbol), "", args.duration, args.bar_size, "TRADES", 1, 1, False, [])
+    app.reqHistoricalData(
+        1,
+        stock(args.symbol),
+        "",
+        args.duration,
+        args.bar_size,
+        args.what_to_show,
+        args.use_rth,
+        args.format_date,
+        False,
+        [],
+    )
 
 
 run_test(args, app, request, "historical bars")

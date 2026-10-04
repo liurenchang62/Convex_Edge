@@ -3,7 +3,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from convexedge.data.ibkr import normalize_historical_bars, parse_ibkr_epoch
+from convexedge.data.ibkr import normalize_daily_bars, normalize_historical_bars, parse_ibkr_epoch
 from convexedge.data.pit import PointInTimeViolation
 
 
@@ -43,4 +43,13 @@ def test_incomplete_bar_cannot_enter_decision_frame() -> None:
             bar_size=timedelta(minutes=5),
             as_of_time=datetime(2026, 1, 2, 14, 34, 59, tzinfo=UTC),
         )
+
+
+def test_daily_bars_preserve_session_date_without_fake_close_time() -> None:
+    bar = Bar("20260102")
+    frame = normalize_daily_bars(
+        [bar], instrument_id="AAPL", downloaded_at=datetime(2026, 1, 3, tzinfo=UTC)
+    )
+    assert str(frame.loc[0, "session_date"]) == "2026-01-02"
+    assert "available_time" not in frame.columns
 

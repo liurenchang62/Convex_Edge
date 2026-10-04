@@ -27,16 +27,31 @@ Level 2 权限只扩展可执行动作，不是研究项目完成的前提。
 ## 当前实现
 
 - `src/convexedge/data`：point-in-time 校验、as-of 对齐、收益标签、实现波动率和 IBKR K 线规范化。
+- `src/convexedge/features.py`：按实际交易序列构建日频特征、多周期标签和下一可用交易日。
 - `tests`：确定性单元测试，包括刻意注入未来信息和未完成 K 线。
 - `test_features/00_ibkr_pit_smoke.py`：使用真实 IBKR 只读历史行情验证 UTC 与数据契约。
 - `docs/data_contract.md`：四时间字段、标签区间和原始数据保存规范。
+- `scripts/collect_ibkr_stock_history.py`：采集复权日线并保存不可变快照。
+- `scripts/collect_ibkr_option_chain.py`：采集不依赖报价权限的期权链结构。
+- `scripts/build_stock_features.py`：从已校验原始快照生成处理层特征数据。
 
 本地验证：
 
 ```powershell
 python -m pytest -q
-python test_features\00_ibkr_pit_smoke.py --symbol AAPL
+python test_features\run_all.py
+python test_features\run_all.py --include-live
 ```
+
+真实数据采集示例：
+
+```powershell
+python scripts\collect_ibkr_stock_history.py --symbol AAPL --duration "1 Y"
+python scripts\collect_ibkr_option_chain.py --symbol AAPL --exchange SMART
+python scripts\build_stock_features.py <原始股票快照目录>
+```
+
+`data/raw` 和 `data/processed` 默认不提交 Git。每个快照包含 Parquet 数据和带 SHA-256 的 manifest；相同 ID 不允许覆盖。
 
 ## 当前安全边界
 

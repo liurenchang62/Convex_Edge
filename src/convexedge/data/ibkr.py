@@ -81,3 +81,35 @@ def normalize_historical_bars(
         return frame
     return validate_point_in_time(frame)
 
+
+def normalize_daily_bars(
+    bars: Iterable[IbkrBar],
+    *,
+    instrument_id: str,
+    downloaded_at: datetime,
+    source: str = "ibkr_tws",
+) -> pd.DataFrame:
+    """Normalize IBKR daily bars without inventing an intraday availability time."""
+
+    if downloaded_at.tzinfo is None or downloaded_at.utcoffset() is None:
+        raise ValueError("downloaded_at must be timezone-aware")
+    rows: list[dict[str, object]] = []
+    for bar in bars:
+        session_date = pd.to_datetime(bar.date, format="%Y%m%d", errors="raise").date()
+        rows.append(
+            {
+                "instrument_id": instrument_id,
+                "session_date": session_date,
+                "open": float(bar.open),
+                "high": float(bar.high),
+                "low": float(bar.low),
+                "close": float(bar.close),
+                "volume": float(bar.volume),
+                "average": float(bar.average),
+                "bar_count": int(bar.barCount),
+                "downloaded_at": downloaded_at.astimezone(UTC),
+                "source": source,
+            }
+        )
+    return pd.DataFrame(rows)
+

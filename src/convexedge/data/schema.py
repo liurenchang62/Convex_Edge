@@ -11,6 +11,7 @@ class DataQuality(StrEnum):
     VALID = "valid"
     STALE = "stale"
     CROSSED = "crossed"
+    WIDE = "wide"
     MISSING = "missing"
     UNTRADABLE = "untradable"
 
